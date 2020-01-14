@@ -4,8 +4,7 @@
 *	simple task manager console application that uses the Win32 API to find
 *	and open processes, and suspend and resume threads.  Uses CreateToolHelp32SnapShot
 *   All h files are pre-complied in pch.h
-*
-*  prefixes : dw->DWORD h->HANDLE, a->array, cb->count_of_bytes, fn->function, sz->Zero Terminted String
+*	prefixes : dw->DWORD h->HANDLE, a->array, cb->count_of_bytes, fn->function, sz->Zero Terminted String
 */
 
 #include "pch.h"
@@ -19,6 +18,11 @@ HANDLE openThread(DWORD x);
 BOOL suspendThread(HANDLE x);
 BOOL fnResumeThread(HANDLE x);
 
+/* Remove when we want to validate the action type based on enum values.
+enum actionType{list_processes, open_process, suspend_thread, resume_thread, exit};
+int const TYPE_CONST = 4;
+*/
+
 int main()
 {
 	string action;    //list_processes //open_process //suspend_thread //resume_thread //exit
@@ -29,12 +33,14 @@ int main()
 	DWORD dwResumeThreadId;
 	DWORD aProcesses[1024], cbNeeded, cProcesses;
 
+	//Get List of process as data type enum. 
 	if (!EnumProcesses(aProcesses, sizeof(aProcesses), &cbNeeded)) {
 		return 1;
 	}
 
 	int flag = 0;
 
+	//Main Program Loop
 	while (flag == 0) {
 
 		cout << "What would you like to do? (Use help)" << endl;
@@ -75,7 +81,6 @@ int main()
 			cout << "Successfully resumed thread ID " << dwResumeThreadId << " " << endl;
 		}
 		else if (action == "help") {
-			cout << "Commands" << endl;
 			cout << "list_processes - get a list of all running proceses" << endl;
 			cout << "open_process - opens a process object and returns its running threads" << endl;
 			cout << "suspend_thread - suspends a thread by the handle to the thread object" << endl;
@@ -158,6 +163,3 @@ BOOL suspendThread(HANDLE hThread) {
 BOOL fnResumeThread(HANDLE hThread) {
 	return ((int)ResumeThread(hThread) >= 0);
 }
-
-
-
