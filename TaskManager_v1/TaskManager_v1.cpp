@@ -18,11 +18,6 @@ HANDLE openThread(DWORD x);
 BOOL suspendThread(HANDLE x);
 BOOL fnResumeThread(HANDLE x);
 
-/* Remove when we want to validate the action type based on enum values.
-enum actionType{list_processes, open_process, suspend_thread, resume_thread, exit};
-int const TYPE_CONST = 4;
-*/
-
 int main()
 {
 	string action;    //list_processes //open_process //suspend_thread //resume_thread //exit
@@ -32,6 +27,7 @@ int main()
 	HANDLE hThread;
 	DWORD dwResumeThreadId;
 	DWORD aProcesses[1024], cbNeeded, cProcesses;
+	//actionType activeType;
 
 	//Get List of process as data type enum. 
 	if (!EnumProcesses(aProcesses, sizeof(aProcesses), &cbNeeded)) {
@@ -89,6 +85,9 @@ int main()
 		}
 		else if (action == "exit") {
 			flag = 1;
+		}
+		else {
+			cout << "Please enter a valid action type" << endl;
 		}
 	}
 	system("pause");
